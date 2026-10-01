@@ -57,7 +57,7 @@ jobs:
             --updates true \
             --memtest none
 
-          echo "=== 3. Добавление пакетов (Драйверы, GUI, IDE инструменты) ==="
+          echo "=== 3. Добавление пакетов (Драйверы, SPIRV, GUI, IDE) ==="
           mkdir -p config/package-lists
           cat << 'PKGS' > config/package-lists/custom.list.chroot
           live-boot
@@ -95,6 +95,9 @@ jobs:
           libvulkan1
           libvulkan-dev
           glslc
+          glslang-tools
+          spirv-headers
+          spirv-tools
           libgomp1
           libcurl4-openssl-dev
           pkg-config
@@ -105,6 +108,17 @@ jobs:
           cat << 'HOOK' > config/hooks/live/99-setup-ai.hook.chroot
           #!/bin/bash
           set -e
+
+          # Установка недостающих SPIR-V зависимостей непосредственно перед сборкой
+          apt-get update
+          apt-get install -y --no-install-recommends \
+              spirv-headers \
+              spirv-tools \
+              glslang-tools \
+              glslc \
+              libvulkan-dev \
+              libcurl4-openssl-dev \
+              pkg-config
 
           # Конфигурация сжатого пула памяти ZRAM
           cat << 'ZRAM' > /etc/systemd/zram-generator.conf
