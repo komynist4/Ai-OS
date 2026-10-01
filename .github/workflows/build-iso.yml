@@ -93,6 +93,8 @@ jobs:
           python3-pip
           python3-venv
           libvulkan1
+          libvulkan-dev
+          glslc
           libgomp1
           libcurl4-openssl-dev
           pkg-config
@@ -167,7 +169,7 @@ jobs:
 
           systemctl enable llama-server.service
 
-          # Утилита загрузки весов Qwen2.5-Coder
+          # Утилита быстрой загрузки Qwen2.5-Coder
           cat << 'DL' > /usr/local/bin/fetch-model
           #!/bin/bash
           echo "Скачивание Qwen2.5-Coder-7B-Instruct-Q4_K_M (~4.7 GB)..."
@@ -185,7 +187,7 @@ jobs:
           lb build
 
           mkdir -p /workspace/output
-          mv live-image-amd64.hybrid.iso /workspace/output/amd-ai-developer-os.iso
+          find . -maxdepth 1 -name "*.iso" -exec cp {} /workspace/output/amd-ai-developer-os.iso \;
           EOF
           chmod +x build.sh
 
